@@ -6,6 +6,7 @@ import ProfileList from './files/ProfileList.js'
 import AddForm from './files/AddForm'
 import AppContext from './AppContext'
 import ProfilePage from './files/ProfilePage'
+import Hardcode from './files/Hardcode'
 
 export default class App2 extends Component {
     constructor(props) {
@@ -14,17 +15,16 @@ export default class App2 extends Component {
             hourly: [],
             data: [
                 { 
-                    name: 'Hubs', zipcode: '08731', phone: '732-604-9540', 
-                    eContact: 'Wife', ePhone: '609-276-5644', notes: 'likes bacon',
-                    profWeather: []
+                    name: 'Hubs', phone: '732-604-9540', eContact: 'Wife',
+                    ePhone: '609-276-5644', notes: 'likes bacon', profWeather: Hardcode
                 },
                 { 
-                    name: 'Wife', zipcode: '08753', phone: '609-276-5644', 
-                    eContact: 'Hubs', ePhone: '732-604-9540', notes: 'likes potatoes',
-                    profWeather: []
+                    name: 'Wife', phone: '609-276-5644', eContact: 'Hubs',
+                    ePhone: '732-604-9540', notes: 'likes potatoes', profWeather: Hardcode
                 }
             ],
-            addProfile: this.handleAddProfile
+            addProfile: this.handleAddProfile,
+            deleteProfile: this.handleDeleteProfile
         }
     }
 
@@ -45,6 +45,7 @@ export default class App2 extends Component {
     fetchWeather = (newZipcode) => {
         const apiKey = `a739cb21d31cec280c853c80f9c01d55`
         const url = `http://api.openweathermap.org/data/2.5/weather?zip=${newZipcode}&appid=${apiKey}&units=imperial`
+        console.log(url)
         fetch(url)
             .then(response => response.json())
             .then(hourly => {
@@ -86,9 +87,12 @@ export default class App2 extends Component {
     renderAddForm() {
         return (
             <Route path='/add'
-                render={() => {
+                render={({ history }) => {
+                    console.log(history)
                     return (
-                        <AddForm />
+                        <AddForm
+                            onClickCancel={() => history.push('/list')}
+                        />
                     )
                 }}
             />
@@ -115,31 +119,40 @@ export default class App2 extends Component {
                 const newList = [
                     ...this.state.data,
                     { 
-                        name: name, zipcode: zipcode, phone: phone, 
-                        eContact: eContact, ePhone: ePhone, notes: notes,
-                        profWeather: profWeather
+                        name: name, phone: phone, eContact: eContact,
+                        ePhone: ePhone, notes: notes, profWeather: profWeather
                     }
                 ]
             this.setState({ data: newList })
         })
     }
 
+    //HANDLE DELETE PROFILE
+    handleDeleteProfile = (e) => {
+        e.preventDefault()
+        console.log(e.target[0].name)
+        const newTarget = e.target[0].name
+        console.log(newTarget)
+        const newList = this.state.data.filter((profile) => profile.name !== newTarget )
+        console.log(newList)
+        this.setState({ data: newList })
+
+    }
+
     // RENDER PROFILE PAGE : INDIVIDUALS
     renderProfilePage() {
-    //    if(this.state.data.length > 0) 
     //        for (let i = 0; i < this.state.data.length; i++) {
     //            let prof = this.state.data[i]
     //            console.log(prof, prof.name)
                 return (
-                    <Route path='/list'
-                        render={() => {
+                    <Route exact path='/list/:profileId'
+                        render={(props) => {
                             return (
-                                <ProfilePage />
-                            )    
+                                <ProfilePage data={this.state.data} props={props} />
+                            )
                         }}
                     />
                 )
-      //      }
     }
    
 
@@ -147,7 +160,8 @@ export default class App2 extends Component {
     render() {
         const contextValue = {
             addProfile: this.state.addProfile,
-            data: this.state.data
+            data: this.state.data,
+            deleteProfile: this.state.deleteProfile
         }
         return (
             <AppContext.Provider value={contextValue}>
@@ -157,7 +171,6 @@ export default class App2 extends Component {
                     <div className='nav'>
                         <NavLink to='/hourly'>Hourly</NavLink>
                         <NavLink to='/list'>Profiles</NavLink>
-                        <NavLink to='/list/:this.state.data'>ProfPa</NavLink>
                     </div>
 
                     <div className='weather-lookup'>

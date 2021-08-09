@@ -1,13 +1,17 @@
 import React from 'react'
 import AppContext from '../AppContext'
+import { withRouter } from 'react-router-dom'
 
-function AddForm() {
+function AddForm(props) {
     return (
         <AppContext.Consumer>
             {(value) => {
-                console.log(value)
                 return (
-                    <form onSubmit={(e) => value.addProfile(e)} id='myForm' >
+                    <form onSubmit={(e) => {
+                        value.addProfile(e);
+                        props.history.push('/list')
+                    }
+                    } id='myForm' >
                         <input
                             type='text' name='profileName' aria-label='new profile name'
                             required placeholder='justin, work, mom..'
@@ -32,8 +36,12 @@ function AddForm() {
                             name='noteSection' rows='10' cols='30'
                             placeholder='notes & details here..'>
                         </textarea>
+                        <button type='button'
+                        onClick={props.onClickCancel}>
+                            Cancel
+                        </button>
                         <button type='submit'>
-                                Add
+                            Add
                         </button>
                     </form>
                 )
@@ -42,4 +50,4 @@ function AddForm() {
     )
 }
 
-export default AddForm
+export default withRouter(AddForm)
