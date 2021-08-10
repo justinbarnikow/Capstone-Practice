@@ -9,7 +9,7 @@ function AddForm(props) {
                 return (
                     <form onSubmit={(e) => {
                         value.addProfile(e);
-                        props.history.push('/list')
+                        props.history.push('/saved')
                     }
                     } id='myForm' >
                         <input

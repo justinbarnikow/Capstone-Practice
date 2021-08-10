@@ -11,7 +11,7 @@ const profile = props.data.find( ({ name }) =>
                 return (
                     <div className='profile-page'>
                         <button type='button'
-                        onClick={() => props.props.history.push('/list')}>
+                        onClick={() => props.props.history.push('/saved')}>
                             return to list
                         </button>
                         <h3>Profile Name: {profile.name}</h3>
@@ -23,7 +23,7 @@ const profile = props.data.find( ({ name }) =>
 
                         <form onSubmit={(e) => {
                             value.deleteProfile(e);
-                            props.props.history.push('/list')
+                            props.props.history.push('/saved')
                         }
                         }>
                             <button type='submit' name={profile.name}>Delete</button>

@@ -7,6 +7,7 @@ import AddForm from './files/AddForm'
 import AppContext from './AppContext'
 import ProfilePage from './files/ProfilePage'
 import Hardcode from './files/Hardcode'
+import './App2.css'
 
 export default class App2 extends Component {
     constructor(props) {
@@ -31,7 +32,7 @@ export default class App2 extends Component {
     // RENDER SEARCH BAR
     renderSearchbar() {
         return (
-            <Route exact path='/hourly'
+            <Route exact path='/home'
             render={() => {
                 return (
                     <Searchbar fetch={this.fetchWeather} />
@@ -60,7 +61,7 @@ export default class App2 extends Component {
             return null
         }
         return (
-            <Route exact path='/hourly' 
+            <Route exact path='/home' 
                 render={() => {
                     return (
                         <DisplayCard hourly={this.state.hourly} />
@@ -73,7 +74,7 @@ export default class App2 extends Component {
     //RENDER PROFILES LIST
     renderProfilesList() {
         return (
-            <Route exact path='/list' 
+            <Route exact path='/saved' 
                 render={() => {
                     return (
                         <ProfileList list={this.state.data} />
@@ -91,7 +92,7 @@ export default class App2 extends Component {
                     console.log(history)
                     return (
                         <AddForm
-                            onClickCancel={() => history.push('/list')}
+                            onClickCancel={() => history.push('/saved')}
                         />
                     )
                 }}
@@ -145,7 +146,7 @@ export default class App2 extends Component {
     //            let prof = this.state.data[i]
     //            console.log(prof, prof.name)
                 return (
-                    <Route exact path='/list/:profileId'
+                    <Route exact path='/saved/:profileId'
                         render={(props) => {
                             return (
                                 <ProfilePage data={this.state.data} props={props} />
@@ -166,19 +167,21 @@ export default class App2 extends Component {
         return (
             <AppContext.Provider value={contextValue}>
                 <div className='App'>
-                    <h1>WeatherApp</h1>
+                    <header>
+                        <h1>WeatherApp</h1>
+                    </header>
 
                     <div className='nav'>
-                        <NavLink to='/hourly'>Hourly</NavLink>
-                        <NavLink to='/list'>Profiles</NavLink>
+                        <NavLink to='/home'>Home</NavLink>
+                        <NavLink to='/saved'>Saved</NavLink>
                     </div>
 
-                    <div className='weather-lookup'>
+                    <div className='dashboard'>
                         {this.renderSearchbar()}
                         {this.renderDisplayCard()}
                     </div>
 
-                    <div className='profiles'>
+                    <div className='route-pages'>
                         {this.renderProfilesList()}
                         {this.renderAddForm()}
                         {this.renderProfilePage()}
